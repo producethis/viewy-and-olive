@@ -2,6 +2,9 @@
 	"folders": [
 		{
 			"path": "."
+		},
+		{
+			"path": "../viewy-and-olive-game"
 		}
 	],
 	"settings": {}
