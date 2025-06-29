@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
     <title>Viewy & Olive - Sticker Locations</title>
     <style>
         * {
@@ -287,6 +291,13 @@
     </div>
 
     <script>
+        // Security: Sanitize user input to prevent XSS
+        function sanitizeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         // Load existing data
         let locations = JSON.parse(localStorage.getItem('stickerLocations') || '[]');
         
@@ -321,11 +332,17 @@
                 const date = new Date(location.timestamp).toLocaleDateString();
                 const time = new Date(location.timestamp).toLocaleTimeString();
                 
+                // SECURITY: Sanitize all user input before displaying
+                const safeCity = sanitizeHTML(location.city);
+                const safeCountry = sanitizeHTML(location.country);
+                const safeLocation = location.location ? sanitizeHTML(location.location) : '';
+                const safeDescription = location.description ? sanitizeHTML(location.description) : '';
+                
                 locationDiv.innerHTML = `
-                    <div class="location-city">${location.city}</div>
-                    <div class="location-country">${location.country}</div>
-                    ${location.location ? `<div class="location-details">📍 ${location.location}</div>` : ''}
-                    ${location.description ? `<div class="location-details">💭 ${location.description}</div>` : ''}
+                    <div class="location-city">${safeCity}</div>
+                    <div class="location-country">${safeCountry}</div>
+                    ${safeLocation ? `<div class="location-details">📍 ${safeLocation}</div>` : ''}
+                    ${safeDescription ? `<div class="location-details">💭 ${safeDescription}</div>` : ''}
                     <div class="location-time">📅 ${date} at ${time}</div>
                 `;
                 
@@ -337,11 +354,29 @@
         document.getElementById('locationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // SECURITY: Validate and sanitize input
+            const city = document.getElementById('city').value.trim();
+            const country = document.getElementById('country').value.trim();
+            const location = document.getElementById('location').value.trim();
+            const description = document.getElementById('description').value.trim();
+            
+            // Basic validation
+            if (!city || !country) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Limit input lengths to prevent abuse
+            if (city.length > 100 || country.length > 100 || location.length > 200 || description.length > 500) {
+                alert('Input too long. Please use shorter text.');
+                return;
+            }
+            
             const formData = {
-                city: document.getElementById('city').value,
-                country: document.getElementById('country').value,
-                location: document.getElementById('location').value,
-                description: document.getElementById('description').value,
+                city: city,
+                country: country,
+                location: location,
+                description: description,
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent
             };

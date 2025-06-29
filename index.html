@@ -3,6 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-Frame-Options" content="DENY">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
     <title>Viewy & Olive</title>
     <link rel="stylesheet" href="style.css">
     <style>
@@ -117,6 +121,13 @@
     
     <script src="landing-animation.js"></script>
     <script>
+        // Security: Sanitize user input to prevent XSS
+        function sanitizeHTML(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+        
         // Form handling
         function toggleForm() {
             const form = document.getElementById('stickerForm');
@@ -126,10 +137,27 @@
         document.getElementById('locationForm').addEventListener('submit', function(e) {
             e.preventDefault();
             
+            // SECURITY: Validate and sanitize input
+            const city = document.getElementById('city').value.trim();
+            const country = document.getElementById('country').value.trim();
+            const location = document.getElementById('location').value.trim();
+            
+            // Basic validation
+            if (!city || !country) {
+                alert('Please fill in all required fields.');
+                return;
+            }
+            
+            // Limit input lengths to prevent abuse
+            if (city.length > 100 || country.length > 100 || location.length > 200) {
+                alert('Input too long. Please use shorter text.');
+                return;
+            }
+            
             const formData = {
-                city: document.getElementById('city').value,
-                country: document.getElementById('country').value,
-                location: document.getElementById('location').value,
+                city: city,
+                country: country,
+                location: location,
                 timestamp: new Date().toISOString(),
                 userAgent: navigator.userAgent
             };
