@@ -9,6 +9,51 @@
     <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;">
     <title>Viewy & Olive</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        /* Doug the Ghost Easter Egg */
+        .doug-ghost {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 80px;
+            height: 80px;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        
+        .doug-ghost.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .doug-ghost img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+        
+        /* Heart particles for click effect */
+        .heart-particle {
+            position: absolute;
+            pointer-events: none;
+            z-index: 999;
+            animation: float-up 2s ease-out forwards;
+        }
+        
+        @keyframes float-up {
+            0% {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) scale(0.5);
+                opacity: 0;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Animation Canvas -->
@@ -22,6 +67,96 @@
         <div class="cloud cloud-4"></div>
     </div>
     
+    <!-- Doug the Ghost Easter Egg -->
+    <div class="doug-ghost" id="dougGhost">
+        <img src="assets/doug.png" alt="Doug the Ghost" onclick="visitHeebieJeebies()">
+    </div>
+    
     <script src="landing-animation.js"></script>
+    <script>
+        // Doug the Ghost Easter Egg
+        let dougTimer = null;
+        let dougVisible = false;
+        let isFirstAppearance = true;
+        
+        function showDoug() {
+            if (dougVisible) return;
+            
+            dougVisible = true;
+            const doug = document.getElementById('dougGhost');
+            doug.classList.add('visible');
+            
+            // Hide Doug after 8 seconds
+            setTimeout(() => {
+                doug.classList.remove('visible');
+                dougVisible = false;
+                scheduleNextDoug();
+            }, 8000);
+        }
+        
+        function scheduleNextDoug() {
+            let randomTime;
+            
+            if (isFirstAppearance) {
+                // First appearance: 8 seconds after page load
+                randomTime = 8000;
+                isFirstAppearance = false;
+            } else {
+                // Subsequent appearances: random time between 1-20 seconds
+                randomTime = Math.random() * (20000 - 1000) + 1000;
+            }
+            
+            dougTimer = setTimeout(showDoug, randomTime);
+        }
+        
+        function visitHeebieJeebies() {
+            window.open('https://heebiejeebiespictures.com', '_blank');
+        }
+        
+        // Start Doug's schedule
+        scheduleNextDoug();
+        
+        // Heart click effect
+        function createHeartParticles(x, y) {
+            const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFC0CB', '#FF69B4'];
+            
+            for (let i = 0; i < 5; i++) {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerHTML = '💖';
+                heart.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+                heart.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+                heart.style.fontSize = (20 + Math.random() * 20) + 'px';
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                heart.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                document.body.appendChild(heart);
+                
+                // Remove heart after animation
+                setTimeout(() => {
+                    if (heart.parentNode) {
+                        heart.parentNode.removeChild(heart);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Add click event listener for heart effect
+        document.addEventListener('click', function(e) {
+            // Don't create hearts if clicking on Doug
+            if (e.target.closest('#dougGhost')) return;
+            
+            createHeartParticles(e.clientX, e.clientY);
+        });
+        
+        // Add touch event listener for mobile
+        document.addEventListener('touchstart', function(e) {
+            // Don't create hearts if touching Doug
+            if (e.target.closest('#dougGhost')) return;
+            
+            const touch = e.touches[0];
+            createHeartParticles(touch.clientX, touch.clientY);
+        });
+    </script>
 </body>
 </html> 
