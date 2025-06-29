@@ -5,6 +5,73 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viewy & Olive</title>
     <link rel="stylesheet" href="style.css">
+    <style>
+        .sticker-form {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            max-width: 300px;
+            z-index: 1000;
+            backdrop-filter: blur(10px);
+        }
+        
+        .sticker-form h3 {
+            margin: 0 0 15px 0;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+        
+        .sticker-form input, .sticker-form select {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 15px 0;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .sticker-form button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .sticker-form button:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+        
+        .success-message {
+            color: #27ae60;
+            font-weight: bold;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .close-form {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: #7f8c8d;
+        }
+        
+        .close-form:hover {
+            color: #e74c3c;
+        }
+    </style>
 </head>
 <body>
     <!-- Animation Canvas -->
@@ -18,6 +85,73 @@
         <div class="cloud cloud-4"></div>
     </div>
     
+    <!-- Sticker Location Form -->
+    <div class="sticker-form" id="stickerForm">
+        <button class="close-form" onclick="toggleForm()">×</button>
+        <h3>🌍 Where did you see a Viewy & Olive sticker?</h3>
+        <form id="locationForm">
+            <input type="text" id="city" placeholder="City" required>
+            <select id="country" required>
+                <option value="">Select Country</option>
+                <option value="USA">United States</option>
+                <option value="Canada">Canada</option>
+                <option value="UK">United Kingdom</option>
+                <option value="Australia">Australia</option>
+                <option value="Germany">Germany</option>
+                <option value="France">France</option>
+                <option value="Japan">Japan</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" id="location" placeholder="Specific location (optional)">
+            <button type="submit">Submit Location</button>
+        </form>
+        <div id="successMessage" class="success-message" style="display: none;">
+            Thanks for sharing! 🌟
+        </div>
+        <div style="margin-top: 15px; text-align: center;">
+            <a href="collect-locations.html" style="color: #3498db; text-decoration: none; font-size: 14px;">
+                View all sticker locations 🗺️
+            </a>
+        </div>
+    </div>
+    
     <script src="landing-animation.js"></script>
+    <script>
+        // Form handling
+        function toggleForm() {
+            const form = document.getElementById('stickerForm');
+            form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        }
+        
+        document.getElementById('locationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                city: document.getElementById('city').value,
+                country: document.getElementById('country').value,
+                location: document.getElementById('location').value,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+            
+            // Store in localStorage (you can replace this with a server call)
+            const submissions = JSON.parse(localStorage.getItem('stickerLocations') || '[]');
+            submissions.push(formData);
+            localStorage.setItem('stickerLocations', JSON.stringify(submissions));
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('locationForm').style.display = 'none';
+            
+            // Reset form after 3 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+                document.getElementById('locationForm').style.display = 'block';
+                document.getElementById('locationForm').reset();
+            }, 3000);
+            
+            console.log('Sticker location submitted:', formData);
+        });
+    </script>
 </body>
 </html> 

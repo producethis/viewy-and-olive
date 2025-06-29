@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viewy & Olive - Sticker Locations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #87CEEB, #98FB98);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5em;
+        }
+
+        .form-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #3498db;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #27ae60;
+        }
+
+        button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        button:hover {
+            background: #229954;
+            transform: translateY(-2px);
+        }
+
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .locations-map {
+            margin-top: 30px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 15px;
+        }
+
+        .location-item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #27ae60;
+        }
+
+        .location-city {
+            font-weight: bold;
+            color: #2c3e50;
+            font-size: 18px;
+        }
+
+        .location-country {
+            color: #7f8c8d;
+            font-size: 14px;
+        }
+
+        .location-details {
+            margin-top: 5px;
+            color: #34495e;
+        }
+
+        .location-time {
+            font-size: 12px;
+            color: #95a5a6;
+            margin-top: 5px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Viewy & Olive</a>
+        
+        <h1>🌍 Viewy & Olive Sticker Locations</h1>
+        
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <div class="stat-number" id="totalLocations">0</div>
+                <div class="stat-label">Total Locations</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCountries">0</div>
+                <div class="stat-label">Countries</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="totalCities">0</div>
+                <div class="stat-label">Cities</div>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>📍 Where did you see a Viewy & Olive sticker?</h2>
+            <form id="locationForm">
+                <div class="form-group">
+                    <label for="city">City *</label>
+                    <input type="text" id="city" placeholder="e.g., Tokyo, New York, London" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="country">Country *</label>
+                    <select id="country" required>
+                        <option value="">Select a country</option>
+                        <option value="Afghanistan">Afghanistan</option>
+                        <option value="Albania">Albania</option>
+                        <option value="Algeria">Algeria</option>
+                        <option value="Argentina">Argentina</option>
+                        <option value="Australia">Australia</option>
+                        <option value="Austria">Austria</option>
+                        <option value="Belgium">Belgium</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Canada">Canada</option>
+                        <option value="Chile">Chile</option>
+                        <option value="China">China</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="Croatia">Croatia</option>
+                        <option value="Czech Republic">Czech Republic</option>
+                        <option value="Denmark">Denmark</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Finland">Finland</option>
+                        <option value="France">France</option>
+                        <option value="Germany">Germany</option>
+                        <option value="Greece">Greece</option>
+                        <option value="Hungary">Hungary</option>
+                        <option value="Iceland">Iceland</option>
+                        <option value="India">India</option>
+                        <option value="Indonesia">Indonesia</option>
+                        <option value="Ireland">Ireland</option>
+                        <option value="Israel">Israel</option>
+                        <option value="Italy">Italy</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Malaysia">Malaysia</option>
+                        <option value="Mexico">Mexico</option>
+                        <option value="Netherlands">Netherlands</option>
+                        <option value="New Zealand">New Zealand</option>
+                        <option value="Norway">Norway</option>
+                        <option value="Peru">Peru</option>
+                        <option value="Philippines">Philippines</option>
+                        <option value="Poland">Poland</option>
+                        <option value="Portugal">Portugal</option>
+                        <option value="Romania">Romania</option>
+                        <option value="Russia">Russia</option>
+                        <option value="Singapore">Singapore</option>
+                        <option value="South Africa">South Africa</option>
+                        <option value="South Korea">South Korea</option>
+                        <option value="Spain">Spain</option>
+                        <option value="Sweden">Sweden</option>
+                        <option value="Switzerland">Switzerland</option>
+                        <option value="Thailand">Thailand</option>
+                        <option value="Turkey">Turkey</option>
+                        <option value="Ukraine">Ukraine</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United States">United States</option>
+                        <option value="Uruguay">Uruguay</option>
+                        <option value="Venezuela">Venezuela</option>
+                        <option value="Vietnam">Vietnam</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="location">Specific Location (Optional)</label>
+                    <input type="text" id="location" placeholder="e.g., Central Park, Tokyo Tower, Eiffel Tower">
+                </div>
+                
+                <div class="form-group">
+                    <label for="description">Description (Optional)</label>
+                    <textarea id="description" rows="3" placeholder="Tell us more about where you found the sticker..."></textarea>
+                </div>
+                
+                <button type="submit">Submit Location 🌟</button>
+            </form>
+            
+            <div id="successMessage" class="success-message" style="display: none;">
+                Thanks for sharing your sticker sighting! 🌍✨
+            </div>
+        </div>
+
+        <div class="locations-map">
+            <h2>🗺️ Sticker Sightings Around the World</h2>
+            <div id="locationsList">
+                <!-- Locations will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load existing data
+        let locations = JSON.parse(localStorage.getItem('stickerLocations') || '[]');
+        
+        // Update stats
+        function updateStats() {
+            const totalLocations = locations.length;
+            const countries = new Set(locations.map(loc => loc.country)).size;
+            const cities = new Set(locations.map(loc => loc.city)).size;
+            
+            document.getElementById('totalLocations').textContent = totalLocations;
+            document.getElementById('totalCountries').textContent = countries;
+            document.getElementById('totalCities').textContent = cities;
+        }
+        
+        // Display locations
+        function displayLocations() {
+            const locationsList = document.getElementById('locationsList');
+            locationsList.innerHTML = '';
+            
+            if (locations.length === 0) {
+                locationsList.innerHTML = '<p style="text-align: center; color: #7f8c8d;">No sticker locations reported yet. Be the first! 🌟</p>';
+                return;
+            }
+            
+            // Sort by timestamp (newest first)
+            const sortedLocations = [...locations].sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            sortedLocations.forEach(location => {
+                const locationDiv = document.createElement('div');
+                locationDiv.className = 'location-item';
+                
+                const date = new Date(location.timestamp).toLocaleDateString();
+                const time = new Date(location.timestamp).toLocaleTimeString();
+                
+                locationDiv.innerHTML = `
+                    <div class="location-city">${location.city}</div>
+                    <div class="location-country">${location.country}</div>
+                    ${location.location ? `<div class="location-details">📍 ${location.location}</div>` : ''}
+                    ${location.description ? `<div class="location-details">💭 ${location.description}</div>` : ''}
+                    <div class="location-time">📅 ${date} at ${time}</div>
+                `;
+                
+                locationsList.appendChild(locationDiv);
+            });
+        }
+        
+        // Form submission
+        document.getElementById('locationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                city: document.getElementById('city').value,
+                country: document.getElementById('country').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value,
+                timestamp: new Date().toISOString(),
+                userAgent: navigator.userAgent
+            };
+            
+            // Add to locations array
+            locations.push(formData);
+            localStorage.setItem('stickerLocations', JSON.stringify(locations));
+            
+            // Update display
+            updateStats();
+            displayLocations();
+            
+            // Show success message
+            document.getElementById('successMessage').style.display = 'block';
+            document.getElementById('locationForm').reset();
+            
+            // Hide success message after 3 seconds
+            setTimeout(() => {
+                document.getElementById('successMessage').style.display = 'none';
+            }, 3000);
+            
+            console.log('Sticker location submitted:', formData);
+        });
+        
+        // Initialize display
+        updateStats();
+        displayLocations();
+    </script>
+</body>
+</html> 
