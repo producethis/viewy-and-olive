@@ -116,7 +116,7 @@
         // Start Doug's schedule
         scheduleNextDoug();
         
-        // Function to check if click is on a character
+        // Function to check if click is on a character or cloud
         function isClickOnCharacter(x, y) {
             if (!window.animationInstance) return false;
             
@@ -134,6 +134,25 @@
                 y >= window.animationInstance.viewy.y && 
                 y <= window.animationInstance.viewy.y + window.animationInstance.viewy.height) {
                 return 'viewy';
+            }
+            
+            return false;
+        }
+        
+        // Function to check if click is on a cloud
+        function isClickOnCloud(x, y) {
+            const clouds = [
+                { x: window.innerWidth * 0.08, y: window.innerHeight * 0.15, width: 120, height: 50 }, // cloud-1
+                { x: window.innerWidth * 0.88, y: window.innerHeight * 0.55, width: 100, height: 40 }, // cloud-2
+                { x: window.innerWidth * 0.15, y: window.innerHeight * 0.75, width: 140, height: 60 }, // cloud-3
+                { x: window.innerWidth * 0.75, y: window.innerHeight * 0.35, width: 110, height: 45 }  // cloud-4
+            ];
+            
+            for (let cloud of clouds) {
+                if (x >= cloud.x && x <= cloud.x + cloud.width &&
+                    y >= cloud.y && y <= cloud.y + cloud.height) {
+                    return true;
+                }
             }
             
             return false;
@@ -189,16 +208,45 @@
             }
         }
         
-        // Add click event listener for heart/coffee effect
+        // Cat emoji click effect
+        function createCatParticles(x, y) {
+            const catEmojis = ['🐱', '🐈', '🐱', '🐈', '🐱'];
+            
+            for (let i = 0; i < 5; i++) {
+                const cat = document.createElement('div');
+                cat.className = 'heart-particle'; // Reuse the same animation
+                cat.innerHTML = catEmojis[i];
+                cat.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+                cat.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+                cat.style.fontSize = (20 + Math.random() * 20) + 'px';
+                cat.style.color = '#FFA500'; // Orange color for cats
+                cat.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                document.body.appendChild(cat);
+                
+                // Remove cat after animation
+                setTimeout(() => {
+                    if (cat.parentNode) {
+                        cat.parentNode.removeChild(cat);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Add click event listener for heart/coffee/cat effect
         document.addEventListener('click', function(e) {
             // Don't create effects if clicking on Doug
             if (e.target.closest('#dougGhost')) return;
             
             const character = isClickOnCharacter(e.clientX, e.clientY);
+            const cloud = isClickOnCloud(e.clientX, e.clientY);
             
             if (character) {
                 // Clicked on a character - show coffee cups
                 createCoffeeParticles(e.clientX, e.clientY);
+            } else if (cloud) {
+                // Clicked on a cloud - show cats
+                createCatParticles(e.clientX, e.clientY);
             } else {
                 // Clicked elsewhere - show hearts
                 createHeartParticles(e.clientX, e.clientY);
@@ -212,10 +260,14 @@
             
             const touch = e.touches[0];
             const character = isClickOnCharacter(touch.clientX, touch.clientY);
+            const cloud = isClickOnCloud(touch.clientX, touch.clientY);
             
             if (character) {
                 // Touched a character - show coffee cups
                 createCoffeeParticles(touch.clientX, touch.clientY);
+            } else if (cloud) {
+                // Touched a cloud - show cats
+                createCatParticles(touch.clientX, touch.clientY);
             } else {
                 // Touched elsewhere - show hearts
                 createHeartParticles(touch.clientX, touch.clientY);
