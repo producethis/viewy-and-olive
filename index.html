@@ -116,6 +116,29 @@
         // Start Doug's schedule
         scheduleNextDoug();
         
+        // Function to check if click is on a character
+        function isClickOnCharacter(x, y) {
+            if (!window.animationInstance) return false;
+            
+            // Check if click is on Olive
+            if (x >= window.animationInstance.olive.x && 
+                x <= window.animationInstance.olive.x + window.animationInstance.olive.width &&
+                y >= window.animationInstance.olive.y && 
+                y <= window.animationInstance.olive.y + window.animationInstance.olive.height) {
+                return 'olive';
+            }
+            
+            // Check if click is on Viewy
+            if (x >= window.animationInstance.viewy.x && 
+                x <= window.animationInstance.viewy.x + window.animationInstance.viewy.width &&
+                y >= window.animationInstance.viewy.y && 
+                y <= window.animationInstance.viewy.y + window.animationInstance.viewy.height) {
+                return 'viewy';
+            }
+            
+            return false;
+        }
+        
         // Heart click effect
         function createHeartParticles(x, y) {
             const colors = ['#FF69B4', '#FF1493', '#FFB6C1', '#FFC0CB', '#FF69B4'];
@@ -141,21 +164,62 @@
             }
         }
         
-        // Add click event listener for heart effect
+        // Coffee cup click effect
+        function createCoffeeParticles(x, y) {
+            const coffeeEmojis = ['☕', '🫖', '☕', '🫖', '☕'];
+            
+            for (let i = 0; i < 5; i++) {
+                const coffee = document.createElement('div');
+                coffee.className = 'heart-particle'; // Reuse the same animation
+                coffee.innerHTML = coffeeEmojis[i];
+                coffee.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
+                coffee.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
+                coffee.style.fontSize = (20 + Math.random() * 20) + 'px';
+                coffee.style.color = '#8B4513'; // Brown color for coffee
+                coffee.style.animationDelay = (Math.random() * 0.5) + 's';
+                
+                document.body.appendChild(coffee);
+                
+                // Remove coffee after animation
+                setTimeout(() => {
+                    if (coffee.parentNode) {
+                        coffee.parentNode.removeChild(coffee);
+                    }
+                }, 2000);
+            }
+        }
+        
+        // Add click event listener for heart/coffee effect
         document.addEventListener('click', function(e) {
-            // Don't create hearts if clicking on Doug
+            // Don't create effects if clicking on Doug
             if (e.target.closest('#dougGhost')) return;
             
-            createHeartParticles(e.clientX, e.clientY);
+            const character = isClickOnCharacter(e.clientX, e.clientY);
+            
+            if (character) {
+                // Clicked on a character - show coffee cups
+                createCoffeeParticles(e.clientX, e.clientY);
+            } else {
+                // Clicked elsewhere - show hearts
+                createHeartParticles(e.clientX, e.clientY);
+            }
         });
         
         // Add touch event listener for mobile
         document.addEventListener('touchstart', function(e) {
-            // Don't create hearts if touching Doug
+            // Don't create effects if touching Doug
             if (e.target.closest('#dougGhost')) return;
             
             const touch = e.touches[0];
-            createHeartParticles(touch.clientX, touch.clientY);
+            const character = isClickOnCharacter(touch.clientX, touch.clientY);
+            
+            if (character) {
+                // Touched a character - show coffee cups
+                createCoffeeParticles(touch.clientX, touch.clientY);
+            } else {
+                // Touched elsewhere - show hearts
+                createHeartParticles(touch.clientX, touch.clientY);
+            }
         });
     </script>
 </body>

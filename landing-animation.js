@@ -396,7 +396,9 @@ class LandingAnimation {
 // Initialize animation when page loads
 window.addEventListener('load', () => {
     console.log('Starting Viewy & Olive animation...');
-    new LandingAnimation();
+    const animation = new LandingAnimation();
+    // Expose animation instance globally for click detection
+    window.animationInstance = animation;
 });
 
 console.log('🌤️ Viewy & Olive are floating around sharing love! 💖🥑'); 
