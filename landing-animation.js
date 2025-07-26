@@ -219,25 +219,25 @@ class LandingAnimation {
     
     spawnHearts() {
         // Olive creates hearts
-        if (this.olive.heartTimer > 120) { // Every 2 seconds (less frequent)
+        if (this.olive.heartTimer > 60) { // Every 1 second (more frequent)
             this.createHeartParticles(this.olive);
             this.olive.heartTimer = 0;
         }
         
         // Viewy creates hearts
-        if (this.viewy.heartTimer > 120) { // Every 2 seconds (less frequent)
+        if (this.viewy.heartTimer > 60) { // Every 1 second (more frequent)
             this.createHeartParticles(this.viewy);
             this.viewy.heartTimer = 0;
         }
     }
     
     createHeartParticles(character) {
-        for (let i = 0; i < 1; i++) { // Fewer hearts
+        for (let i = 0; i < 2; i++) { // More hearts per spawn
             this.hearts.push({
-                x: character.x + character.width / 2 + (Math.random() - 0.5) * 40,
+                x: character.x + character.width / 2 + (Math.random() - 0.5) * 60,
                 y: character.y + character.height / 2,
-                velocityX: (Math.random() - 0.5) * 1,
-                velocityY: 0.8 + Math.random() * 1,
+                velocityX: (Math.random() - 0.5) * 1.5,
+                velocityY: 1 + Math.random() * 1.5,
                 life: 60,
                 scale: 1,
                 color: '#FF69B4' // Pink hearts for both characters
