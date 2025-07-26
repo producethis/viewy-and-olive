@@ -23,7 +23,19 @@ class LandingAnimation {
             velocityYFloat: 0,
             floatTimer: 0,
             heartTimer: 0,
-            direction: 1
+            direction: 1,
+            // Enhanced movement properties
+            zigzagTimer: 0,
+            zigzagAmplitude: 50,
+            zigzagFrequency: 0.02,
+            circleTimer: 0,
+            circleRadius: 30,
+            circleSpeed: 0.03,
+            movementMode: 'zigzag', // 'zigzag', 'circle', 'wave', 'random'
+            modeTimer: 0,
+            targetX: 0,
+            targetY: 0,
+            wanderTimer: 0
         };
         
         this.viewy = {
@@ -36,7 +48,19 @@ class LandingAnimation {
             velocityYFloat: 0,
             floatTimer: 0,
             heartTimer: 0,
-            direction: -1
+            direction: -1,
+            // Enhanced movement properties
+            zigzagTimer: 0,
+            zigzagAmplitude: 60,
+            zigzagFrequency: 0.025,
+            circleTimer: 0,
+            circleRadius: 40,
+            circleSpeed: 0.035,
+            movementMode: 'circle', // 'zigzag', 'circle', 'wave', 'random'
+            modeTimer: 0,
+            targetX: 0,
+            targetY: 0,
+            wanderTimer: 0
         };
         
         this.hearts = [];
@@ -127,13 +151,37 @@ class LandingAnimation {
     }
     
     updateOlive() {
+        // Update movement mode timer
+        this.olive.modeTimer++;
+        if (this.olive.modeTimer > 300) { // Change mode every 5 seconds
+            this.olive.modeTimer = 0;
+            this.olive.movementMode = this.getRandomMovementMode();
+            this.olive.targetX = Math.random() * (this.canvas.width - this.olive.width);
+            this.olive.targetY = Math.random() * (this.canvas.height - this.olive.height - 100) + 50;
+        }
+        
+        // Apply different movement patterns based on mode
+        switch (this.olive.movementMode) {
+            case 'zigzag':
+                this.updateOliveZigzag();
+                break;
+            case 'circle':
+                this.updateOliveCircle();
+                break;
+            case 'wave':
+                this.updateOliveWave();
+                break;
+            case 'random':
+                this.updateOliveRandom();
+                break;
+        }
+        
         // Floating motion
         this.olive.floatTimer += 0.03;
         this.olive.velocityYFloat = Math.sin(this.olive.floatTimer) * 0.5;
         
         // Update position with floating
         this.olive.y += this.olive.velocityYFloat;
-        this.olive.x += this.olive.velocityX;
         
         // Keep Olive in bounds with bounce
         if (this.olive.x < 0) {
@@ -162,13 +210,37 @@ class LandingAnimation {
     }
     
     updateViewy() {
+        // Update movement mode timer
+        this.viewy.modeTimer++;
+        if (this.viewy.modeTimer > 400) { // Change mode every ~6.7 seconds (different timing)
+            this.viewy.modeTimer = 0;
+            this.viewy.movementMode = this.getRandomMovementMode();
+            this.viewy.targetX = Math.random() * (this.canvas.width - this.viewy.width);
+            this.viewy.targetY = Math.random() * (this.canvas.height - this.viewy.height - 100) + 50;
+        }
+        
+        // Apply different movement patterns based on mode
+        switch (this.viewy.movementMode) {
+            case 'zigzag':
+                this.updateViewyZigzag();
+                break;
+            case 'circle':
+                this.updateViewyCircle();
+                break;
+            case 'wave':
+                this.updateViewyWave();
+                break;
+            case 'random':
+                this.updateViewyRandom();
+                break;
+        }
+        
         // Floating motion
         this.viewy.floatTimer += 0.04;
         this.viewy.velocityYFloat = Math.sin(this.viewy.floatTimer) * 0.6;
         
         // Update position with floating
         this.viewy.y += this.viewy.velocityYFloat;
-        this.viewy.x += this.viewy.velocityX;
         
         // Keep Viewy in bounds with bounce
         if (this.viewy.x < 0) {
@@ -194,6 +266,93 @@ class LandingAnimation {
         
         // Heart timer
         this.viewy.heartTimer++;
+    }
+    
+    // New movement pattern methods for Olive
+    updateOliveZigzag() {
+        this.olive.zigzagTimer += this.olive.zigzagFrequency;
+        const zigzagOffset = Math.sin(this.olive.zigzagTimer) * this.olive.zigzagAmplitude;
+        
+        this.olive.x += this.olive.velocityX;
+        this.olive.y += zigzagOffset * 0.1;
+    }
+    
+    updateOliveCircle() {
+        this.olive.circleTimer += this.olive.circleSpeed;
+        const centerX = this.canvas.width / 2;
+        const centerY = this.canvas.height / 2;
+        
+        this.olive.x = centerX + Math.cos(this.olive.circleTimer) * this.olive.circleRadius;
+        this.olive.y = centerY + Math.sin(this.olive.circleTimer) * this.olive.circleRadius;
+    }
+    
+    updateOliveWave() {
+        this.olive.zigzagTimer += 0.02;
+        const waveOffset = Math.sin(this.olive.zigzagTimer) * 100;
+        
+        this.olive.x += this.olive.velocityX;
+        this.olive.y = this.canvas.height / 2 + waveOffset;
+    }
+    
+    updateOliveRandom() {
+        this.olive.wanderTimer++;
+        if (this.olive.wanderTimer > 60) {
+            this.olive.wanderTimer = 0;
+            this.olive.targetX = Math.random() * (this.canvas.width - this.olive.width);
+            this.olive.targetY = Math.random() * (this.canvas.height - this.olive.height - 100) + 50;
+        }
+        
+        // Move towards target
+        const dx = this.olive.targetX - this.olive.x;
+        const dy = this.olive.targetY - this.olive.y;
+        this.olive.x += dx * 0.02;
+        this.olive.y += dy * 0.02;
+    }
+    
+    // New movement pattern methods for Viewy
+    updateViewyZigzag() {
+        this.viewy.zigzagTimer += this.viewy.zigzagFrequency;
+        const zigzagOffset = Math.sin(this.viewy.zigzagTimer) * this.viewy.zigzagAmplitude;
+        
+        this.viewy.x += this.viewy.velocityX;
+        this.viewy.y += zigzagOffset * 0.1;
+    }
+    
+    updateViewyCircle() {
+        this.viewy.circleTimer += this.viewy.circleSpeed;
+        const centerX = this.canvas.width / 3;
+        const centerY = this.canvas.height / 3;
+        
+        this.viewy.x = centerX + Math.cos(this.viewy.circleTimer) * this.viewy.circleRadius;
+        this.viewy.y = centerY + Math.sin(this.viewy.circleTimer) * this.viewy.circleRadius;
+    }
+    
+    updateViewyWave() {
+        this.viewy.zigzagTimer += 0.025;
+        const waveOffset = Math.sin(this.viewy.zigzagTimer) * 120;
+        
+        this.viewy.x += this.viewy.velocityX;
+        this.viewy.y = this.canvas.height / 3 + waveOffset;
+    }
+    
+    updateViewyRandom() {
+        this.viewy.wanderTimer++;
+        if (this.viewy.wanderTimer > 80) {
+            this.viewy.wanderTimer = 0;
+            this.viewy.targetX = Math.random() * (this.canvas.width - this.viewy.width);
+            this.viewy.targetY = Math.random() * (this.canvas.height - this.viewy.height - 100) + 50;
+        }
+        
+        // Move towards target
+        const dx = this.viewy.targetX - this.viewy.x;
+        const dy = this.viewy.targetY - this.viewy.y;
+        this.viewy.x += dx * 0.015;
+        this.viewy.y += dy * 0.015;
+    }
+    
+    getRandomMovementMode() {
+        const modes = ['zigzag', 'circle', 'wave', 'random'];
+        return modes[Math.floor(Math.random() * modes.length)];
     }
     
     updateHearts() {
