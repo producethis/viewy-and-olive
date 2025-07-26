@@ -52,6 +52,10 @@ class LandingAnimation {
         this.hearts = [];
         this.particles = [];
         
+        // Collision detection variables
+        this.collisionActive = false;
+        this.collisionTimer = 0;
+        
         // Animation settings
         this.gravity = 0.2;
         this.jumpPower = -8;
@@ -131,6 +135,7 @@ class LandingAnimation {
     update() {
         this.updateOlive();
         this.updateViewy();
+        this.checkCollision();
         this.updateHearts();
         this.updateParticles();
         this.spawnHearts();
@@ -188,6 +193,72 @@ class LandingAnimation {
         
         // Heart timer
         this.viewy.heartTimer++;
+    }
+    
+    checkCollision() {
+        // Check if characters are overlapping
+        const oliveLeft = this.olive.x;
+        const oliveRight = this.olive.x + this.olive.width;
+        const oliveTop = this.olive.y;
+        const oliveBottom = this.olive.y + this.olive.height;
+        
+        const viewyLeft = this.viewy.x;
+        const viewyRight = this.viewy.x + this.viewy.width;
+        const viewyTop = this.viewy.y;
+        const viewyBottom = this.viewy.y + this.viewy.height;
+        
+        // Check for overlap
+        const isOverlapping = !(oliveRight < viewyLeft || 
+                               oliveLeft > viewyRight || 
+                               oliveBottom < viewyTop || 
+                               oliveTop > viewyBottom);
+        
+        // If they're overlapping and we haven't already triggered the burst
+        if (isOverlapping && !this.collisionActive) {
+            this.collisionActive = true;
+            this.collisionTimer = 0;
+            console.log('Viewy and Olive are crossing paths! 💖');
+        }
+        
+        // If they're not overlapping anymore, reset the collision state
+        if (!isOverlapping && this.collisionActive) {
+            this.collisionActive = false;
+            console.log('Viewy and Olive have separated');
+        }
+        
+        // If collision is active, create heart burst
+        if (this.collisionActive) {
+            this.collisionTimer++;
+            // Only create hearts every 5 frames to avoid performance issues
+            if (this.collisionTimer % 5 === 0) {
+                this.createCollisionHeartBurst();
+            }
+        }
+    }
+    
+    createCollisionHeartBurst() {
+        // Create a small amount of hearts during collision
+        for (let i = 0; i < 1; i++) { // 1 heart per frame during collision
+            this.hearts.push({
+                x: this.olive.x + this.olive.width / 2 + (Math.random() - 0.5) * 100,
+                y: this.olive.y + this.olive.height / 2 + (Math.random() - 0.5) * 50,
+                velocityX: (Math.random() - 0.5) * 3,
+                velocityY: 2 + Math.random() * 3,
+                life: 90, // Longer life for collision hearts
+                scale: 1.2, // Slightly bigger hearts
+                color: '#FF1493' // Hot pink for special collision hearts
+            });
+            
+            this.hearts.push({
+                x: this.viewy.x + this.viewy.width / 2 + (Math.random() - 0.5) * 100,
+                y: this.viewy.y + this.viewy.height / 2 + (Math.random() - 0.5) * 50,
+                velocityX: (Math.random() - 0.5) * 3,
+                velocityY: 2 + Math.random() * 3,
+                life: 90, // Longer life for collision hearts
+                scale: 1.2, // Slightly bigger hearts
+                color: '#FF1493' // Hot pink for special collision hearts
+            });
+        }
     }
     
     updateHearts() {
