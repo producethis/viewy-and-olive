@@ -236,6 +236,83 @@ body {
     .coming-soon-text {
         font-size: 1.5em;
     }
+    
+    /* Make clouds smaller on mobile */
+    .cloud-1 {
+        width: 80px;
+        height: 35px;
+    }
+    
+    .cloud-1::before {
+        width: 40px;
+        height: 40px;
+        top: -20px;
+        left: 8px;
+    }
+    
+    .cloud-1::after {
+        width: 45px;
+        height: 45px;
+        top: -22px;
+        right: 8px;
+    }
+    
+    .cloud-2 {
+        width: 70px;
+        height: 30px;
+    }
+    
+    .cloud-2::before {
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        left: 7px;
+    }
+    
+    .cloud-2::after {
+        width: 40px;
+        height: 40px;
+        top: -20px;
+        right: 7px;
+    }
+    
+    .cloud-3 {
+        width: 90px;
+        height: 40px;
+    }
+    
+    .cloud-3::before {
+        width: 45px;
+        height: 45px;
+        top: -22px;
+        left: 12px;
+    }
+    
+    .cloud-3::after {
+        width: 50px;
+        height: 50px;
+        top: -25px;
+        right: 12px;
+    }
+    
+    .cloud-4 {
+        width: 75px;
+        height: 32px;
+    }
+    
+    .cloud-4::before {
+        width: 38px;
+        height: 38px;
+        top: -19px;
+        left: 8px;
+    }
+    
+    .cloud-4::after {
+        width: 42px;
+        height: 42px;
+        top: -21px;
+        right: 8px;
+    }
 }
 
 @media (max-width: 480px) {

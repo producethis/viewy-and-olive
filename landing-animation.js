@@ -153,13 +153,13 @@ class LandingAnimation {
         this.olive.y = this.canvas.height / 2 + floatOffset;
         
         // Keep Olive in bounds with gentle bounce
-        if (this.olive.x < 50) {
-            this.olive.x = 50;
+        if (this.olive.x < 10) {
+            this.olive.x = 10;
             this.olive.velocityX = Math.abs(this.olive.velocityX);
             this.olive.direction = 1;
         }
-        if (this.olive.x > this.canvas.width - this.olive.width - 50) {
-            this.olive.x = this.canvas.width - this.olive.width - 50;
+        if (this.olive.x > this.canvas.width - this.olive.width - 10) {
+            this.olive.x = this.canvas.width - this.olive.width - 10;
             this.olive.velocityX = -Math.abs(this.olive.velocityX);
             this.olive.direction = -1;
         }
@@ -180,13 +180,13 @@ class LandingAnimation {
         this.viewy.y = this.canvas.height / 2 + floatOffset;
         
         // Keep Viewy in bounds with gentle bounce
-        if (this.viewy.x < 50) {
-            this.viewy.x = 50;
+        if (this.viewy.x < 10) {
+            this.viewy.x = 10;
             this.viewy.velocityX = Math.abs(this.viewy.velocityX);
             this.viewy.direction = 1;
         }
-        if (this.viewy.x > this.canvas.width - this.viewy.width - 50) {
-            this.viewy.x = this.canvas.width - this.viewy.width - 50;
+        if (this.viewy.x > this.canvas.width - this.viewy.width - 10) {
+            this.viewy.x = this.canvas.width - this.viewy.width - 10;
             this.viewy.velocityX = -Math.abs(this.viewy.velocityX);
             this.viewy.direction = -1;
         }
