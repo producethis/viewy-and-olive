@@ -236,10 +236,6 @@ body {
     .coming-soon-text {
         font-size: 1.5em;
     }
-    
-    .cloud {
-        display: none;
-    }
 }
 
 @media (max-width: 480px) {
@@ -687,10 +683,6 @@ body {
     .social-links {
         flex-direction: column;
         align-items: center;
-    }
-    
-    .cloud {
-        display: none;
     }
 }
 
