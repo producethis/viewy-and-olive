@@ -65,6 +65,10 @@
         <div class="cloud cloud-2"></div>
         <div class="cloud cloud-3"></div>
         <div class="cloud cloud-4"></div>
+        <div class="cloud cloud-5"></div>
+        <div class="cloud cloud-6"></div>
+        <div class="cloud cloud-7"></div>
+        <div class="cloud cloud-8"></div>
     </div>
     
     <!-- Doug the Ghost Easter Egg -->
@@ -141,16 +145,15 @@
         
         // Function to check if click is on a cloud
         function isClickOnCloud(x, y) {
-            const clouds = [
-                { x: window.innerWidth * 0.08, y: window.innerHeight * 0.15, width: 120, height: 50 }, // cloud-1
-                { x: window.innerWidth * 0.88, y: window.innerHeight * 0.55, width: 100, height: 40 }, // cloud-2
-                { x: window.innerWidth * 0.15, y: window.innerHeight * 0.75, width: 140, height: 60 }, // cloud-3
-                { x: window.innerWidth * 0.75, y: window.innerHeight * 0.35, width: 110, height: 45 }  // cloud-4
-            ];
+            // Get all cloud elements
+            const cloudElements = document.querySelectorAll('.cloud');
             
-            for (let cloud of clouds) {
-                if (x >= cloud.x && x <= cloud.x + cloud.width &&
-                    y >= cloud.y && y <= cloud.y + cloud.height) {
+            for (let cloud of cloudElements) {
+                const rect = cloud.getBoundingClientRect();
+                
+                // Check if click is within the cloud's bounds
+                if (x >= rect.left && x <= rect.right &&
+                    y >= rect.top && y <= rect.bottom) {
                     return true;
                 }
             }
@@ -206,16 +209,54 @@
                     }
                 }, 2000);
             }
+            
+            // Apply caffeine boost to characters
+            applyCaffeineBoost();
+        }
+        
+        // Caffeine boost effect
+        function applyCaffeineBoost(clickedCharacter) {
+            if (!window.animationInstance) return;
+            
+            // Increase speed for the clicked character only
+            const speedMultiplier = 2.5; // 2.5x speed boost
+            const boostDuration = 1000; // 1 second
+            
+            let character;
+            let originalSpeedX, originalSpeedY;
+            
+            if (clickedCharacter === 'olive') {
+                character = window.animationInstance.olive;
+                originalSpeedX = Math.abs(character.velocityX);
+                originalSpeedY = Math.abs(character.velocityY);
+            } else if (clickedCharacter === 'viewy') {
+                character = window.animationInstance.viewy;
+                originalSpeedX = Math.abs(character.velocityX);
+                originalSpeedY = Math.abs(character.velocityY);
+            } else {
+                return; // Invalid character
+            }
+            
+            // Apply speed boost to the clicked character only
+            character.velocityX *= speedMultiplier;
+            character.velocityY *= speedMultiplier;
+            
+            // Reset after duration
+            setTimeout(() => {
+                if (window.animationInstance && character) {
+                    // Restore original speeds (maintain direction)
+                    character.velocityX = Math.sign(character.velocityX) * originalSpeedX;
+                    character.velocityY = Math.sign(character.velocityY) * originalSpeedY;
+                }
+            }, boostDuration);
         }
         
         // Cat emoji click effect
         function createCatParticles(x, y) {
-            const catEmojis = ['🐱', '🐈', '🐱', '🐈', '🐱'];
-            
             for (let i = 0; i < 5; i++) {
                 const cat = document.createElement('div');
                 cat.className = 'heart-particle'; // Reuse the same animation
-                cat.innerHTML = catEmojis[i];
+                cat.innerHTML = '🐱'; // Only yellow cat face
                 cat.style.left = (x + (Math.random() - 0.5) * 40) + 'px';
                 cat.style.top = (y + (Math.random() - 0.5) * 40) + 'px';
                 cat.style.fontSize = (20 + Math.random() * 20) + 'px';
@@ -242,8 +283,9 @@
             const cloud = isClickOnCloud(e.clientX, e.clientY);
             
             if (character) {
-                // Clicked on a character - show coffee cups
+                // Clicked on a character - show coffee cups and apply caffeine boost
                 createCoffeeParticles(e.clientX, e.clientY);
+                applyCaffeineBoost(character);
             } else if (cloud) {
                 // Clicked on a cloud - show cats
                 createCatParticles(e.clientX, e.clientY);
@@ -263,8 +305,9 @@
             const cloud = isClickOnCloud(touch.clientX, touch.clientY);
             
             if (character) {
-                // Touched a character - show coffee cups
+                // Touched a character - show coffee cups and apply caffeine boost
                 createCoffeeParticles(touch.clientX, touch.clientY);
+                applyCaffeineBoost(character);
             } else if (cloud) {
                 // Touched a cloud - show cats
                 createCatParticles(touch.clientX, touch.clientY);

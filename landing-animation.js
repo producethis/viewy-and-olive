@@ -18,17 +18,14 @@ class LandingAnimation {
             y: 300,
             width: 120,
             height: 150,
-            velocityY: 0,
-            velocityX: 0.8, // Slower, smoother movement
-            velocityYFloat: 0,
+            velocityX: (Math.random() - 0.5) * 6, // Random initial direction
+            velocityY: (Math.random() - 0.5) * 4, // Random initial direction
             floatTimer: 0,
             heartTimer: 0,
-            direction: 1,
-            // Simplified movement properties
-            movementMode: 'gentle', // Single gentle mode instead of multiple chaotic ones
-            floatAmplitude: 30,
-            floatSpeed: 0.02,
-            horizontalSpeed: 0.8
+            // Bouncing movement
+            movementMode: 'bounce',
+            floatAmplitude: 60,
+            floatSpeed: 0.015
         };
         
         this.viewy = {
@@ -36,17 +33,14 @@ class LandingAnimation {
             y: 200,
             width: 200,
             height: 150,
-            velocityX: -1.2, // Slower, smoother movement
-            velocityY: 0,
-            velocityYFloat: 0,
+            velocityX: (Math.random() - 0.5) * 7, // Random initial direction
+            velocityY: (Math.random() - 0.5) * 5, // Random initial direction
             floatTimer: 0,
             heartTimer: 0,
-            direction: -1,
-            // Simplified movement properties
-            movementMode: 'gentle', // Single gentle mode instead of multiple chaotic ones
-            floatAmplitude: 40,
-            floatSpeed: 0.025,
-            horizontalSpeed: 1.2
+            // Bouncing movement
+            movementMode: 'bounce',
+            floatAmplitude: 80,
+            floatSpeed: 0.02
         };
         
         this.hearts = [];
@@ -142,26 +136,30 @@ class LandingAnimation {
     }
     
     updateOlive() {
-        // Simple, gentle floating movement
+        // Pure momentum movement - no floating motion
         this.olive.floatTimer += this.olive.floatSpeed;
         
-        // Horizontal movement with gentle bouncing
+        // Move based on velocity only
         this.olive.x += this.olive.velocityX;
+        this.olive.y += this.olive.velocityY;
         
-        // Vertical floating motion
-        const floatOffset = Math.sin(this.olive.floatTimer) * this.olive.floatAmplitude;
-        this.olive.y = this.canvas.height / 2 + floatOffset;
-        
-        // Keep Olive in bounds with gentle bounce
-        if (this.olive.x < 10) {
-            this.olive.x = 10;
+        // Bounce off screen edges
+        if (this.olive.x < 0) {
+            this.olive.x = 0;
             this.olive.velocityX = Math.abs(this.olive.velocityX);
-            this.olive.direction = 1;
         }
-        if (this.olive.x > this.canvas.width - this.olive.width - 10) {
-            this.olive.x = this.canvas.width - this.olive.width - 10;
+        if (this.olive.x > this.canvas.width - this.olive.width) {
+            this.olive.x = this.canvas.width - this.olive.width;
             this.olive.velocityX = -Math.abs(this.olive.velocityX);
-            this.olive.direction = -1;
+        }
+        
+        if (this.olive.y < 0) {
+            this.olive.y = 0;
+            this.olive.velocityY = Math.abs(this.olive.velocityY);
+        }
+        if (this.olive.y > this.canvas.height - this.olive.height) {
+            this.olive.y = this.canvas.height - this.olive.height;
+            this.olive.velocityY = -Math.abs(this.olive.velocityY);
         }
         
         // Heart timer
@@ -169,26 +167,30 @@ class LandingAnimation {
     }
     
     updateViewy() {
-        // Simple, gentle floating movement
+        // Pure momentum movement - no floating motion
         this.viewy.floatTimer += this.viewy.floatSpeed;
         
-        // Horizontal movement with gentle bouncing
+        // Move based on velocity only
         this.viewy.x += this.viewy.velocityX;
+        this.viewy.y += this.viewy.velocityY;
         
-        // Vertical floating motion (slightly different phase for variety)
-        const floatOffset = Math.sin(this.viewy.floatTimer + Math.PI) * this.viewy.floatAmplitude;
-        this.viewy.y = this.canvas.height / 2 + floatOffset;
-        
-        // Keep Viewy in bounds with gentle bounce
-        if (this.viewy.x < 10) {
-            this.viewy.x = 10;
+        // Bounce off screen edges
+        if (this.viewy.x < 0) {
+            this.viewy.x = 0;
             this.viewy.velocityX = Math.abs(this.viewy.velocityX);
-            this.viewy.direction = 1;
         }
-        if (this.viewy.x > this.canvas.width - this.viewy.width - 10) {
-            this.viewy.x = this.canvas.width - this.viewy.width - 10;
+        if (this.viewy.x > this.canvas.width - this.viewy.width) {
+            this.viewy.x = this.canvas.width - this.viewy.width;
             this.viewy.velocityX = -Math.abs(this.viewy.velocityX);
-            this.viewy.direction = -1;
+        }
+        
+        if (this.viewy.y < 0) {
+            this.viewy.y = 0;
+            this.viewy.velocityY = Math.abs(this.viewy.velocityY);
+        }
+        if (this.viewy.y > this.canvas.height - this.viewy.height) {
+            this.viewy.y = this.canvas.height - this.viewy.height;
+            this.viewy.velocityY = -Math.abs(this.viewy.velocityY);
         }
         
         // Heart timer
@@ -213,24 +215,27 @@ class LandingAnimation {
                                oliveBottom < viewyTop || 
                                oliveTop > viewyBottom);
         
-        // If they're overlapping and we haven't already triggered the burst
-        if (isOverlapping && !this.collisionActive) {
-            this.collisionActive = true;
-            this.collisionTimer = 0;
-            console.log('Viewy and Olive are crossing paths! 💖');
-        }
-        
-        // If they're not overlapping anymore, reset the collision state
-        if (!isOverlapping && this.collisionActive) {
-            this.collisionActive = false;
-            console.log('Viewy and Olive have separated');
+        // If they're overlapping, create hearts but don't bounce
+        if (isOverlapping) {
+            // Create heart burst on overlap
+            if (!this.collisionActive) {
+                this.collisionActive = true;
+                this.collisionTimer = 0;
+                console.log('Viewy and Olive are crossing paths! 💖');
+            }
+        } else {
+            // Reset collision state
+            if (this.collisionActive) {
+                this.collisionActive = false;
+                console.log('Viewy and Olive have separated');
+            }
         }
         
         // If collision is active, create heart burst
         if (this.collisionActive) {
             this.collisionTimer++;
-            // Only create hearts every 5 frames to avoid performance issues
-            if (this.collisionTimer % 5 === 0) {
+            // Only create hearts every 3 frames to avoid performance issues
+            if (this.collisionTimer % 3 === 0) {
                 this.createCollisionHeartBurst();
             }
         }

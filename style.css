@@ -120,7 +120,7 @@ body {
     height: 50px;
     top: 15%;
     left: 8%;
-    animation-delay: 0s;
+    animation: float1 12s ease-in-out infinite;
 }
 
 .cloud-1::before {
@@ -142,7 +142,7 @@ body {
     height: 40px;
     top: 55%;
     right: 12%;
-    animation-delay: 2s;
+    animation: float2 15s ease-in-out infinite;
 }
 
 .cloud-2::before {
@@ -164,7 +164,7 @@ body {
     height: 60px;
     top: 75%;
     left: 15%;
-    animation-delay: 4s;
+    animation: float3 18s ease-in-out infinite;
 }
 
 .cloud-3::before {
@@ -186,7 +186,7 @@ body {
     height: 45px;
     top: 35%;
     left: 75%;
-    animation-delay: 1s;
+    animation: float4 14s ease-in-out infinite;
 }
 
 .cloud-4::before {
@@ -203,19 +203,146 @@ body {
     right: 12px;
 }
 
-@keyframes float {
-    0%, 100% {
-        transform: translateY(0px) translateX(0px);
+.cloud-5 {
+    width: 90px;
+    height: 35px;
+    top: 25%;
+    left: 60%;
+    animation: float5 16s ease-in-out infinite;
+}
+
+.cloud-5::before {
+    width: 45px;
+    height: 45px;
+    top: -22px;
+    left: 10px;
+}
+
+.cloud-5::after {
+    width: 50px;
+    height: 50px;
+    top: -25px;
+    right: 10px;
+}
+
+.cloud-6 {
+    width: 130px;
+    height: 55px;
+    top: 65%;
+    right: 25%;
+    animation: float6 20s ease-in-out infinite;
+}
+
+.cloud-6::before {
+    width: 65px;
+    height: 65px;
+    top: -32px;
+    left: 15px;
+}
+
+.cloud-6::after {
+    width: 75px;
+    height: 75px;
+    top: -37px;
+    right: 15px;
+}
+
+.cloud-7 {
+    width: 85px;
+    height: 38px;
+    top: 45%;
+    left: 25%;
+    animation: float7 13s ease-in-out infinite;
+}
+
+.cloud-7::before {
+    width: 42px;
+    height: 42px;
+    top: -21px;
+    left: 8px;
     }
-    25% {
-        transform: translateY(-25px) translateX(15px);
-    }
-    50% {
-        transform: translateY(-15px) translateX(-15px);
-    }
-    75% {
-        transform: translateY(-30px) translateX(10px);
-    }
+
+.cloud-7::after {
+    width: 48px;
+    height: 48px;
+    top: -24px;
+    right: 8px;
+}
+
+.cloud-8 {
+    width: 110px;
+    height: 48px;
+    top: 85%;
+    right: 5%;
+    animation: float8 17s ease-in-out infinite;
+}
+
+.cloud-8::before {
+    width: 55px;
+    height: 55px;
+    top: -27px;
+    left: 12px;
+}
+
+.cloud-8::after {
+    width: 60px;
+    height: 60px;
+    top: -30px;
+    right: 12px;
+}
+
+@keyframes float1 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-20px) translateX(25px); }
+    50% { transform: translateY(-10px) translateX(-20px); }
+    75% { transform: translateY(-25px) translateX(15px); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    33% { transform: translateY(-30px) translateX(-30px); }
+    66% { transform: translateY(-15px) translateX(20px); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    20% { transform: translateY(-25px) translateX(15px); }
+    40% { transform: translateY(-35px) translateX(-25px); }
+    60% { transform: translateY(-10px) translateX(30px); }
+    80% { transform: translateY(-20px) translateX(-10px); }
+}
+
+@keyframes float4 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    50% { transform: translateY(-40px) translateX(-15px); }
+}
+
+@keyframes float5 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-15px) translateX(-25px); }
+    50% { transform: translateY(-30px) translateX(20px); }
+    75% { transform: translateY(-10px) translateX(-15px); }
+}
+
+@keyframes float6 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    33% { transform: translateY(-35px) translateX(25px); }
+    66% { transform: translateY(-20px) translateX(-30px); }
+}
+
+@keyframes float7 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    20% { transform: translateY(-20px) translateX(-20px); }
+    40% { transform: translateY(-30px) translateX(15px); }
+    60% { transform: translateY(-15px) translateX(-25px); }
+    80% { transform: translateY(-25px) translateX(20px); }
+}
+
+@keyframes float8 {
+    0%, 100% { transform: translateY(0px) translateX(0px); }
+    25% { transform: translateY(-25px) translateX(30px); }
+    50% { transform: translateY(-40px) translateX(-20px); }
+    75% { transform: translateY(-15px) translateX(25px); }
 }
 
 /* Responsive Design */
@@ -311,6 +438,82 @@ body {
         width: 42px;
         height: 42px;
         top: -21px;
+        right: 8px;
+    }
+    
+    .cloud-5 {
+        width: 60px;
+        height: 25px;
+    }
+    
+    .cloud-5::before {
+        width: 30px;
+        height: 30px;
+        top: -15px;
+        left: 7px;
+    }
+    
+    .cloud-5::after {
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        right: 7px;
+    }
+    
+    .cloud-6 {
+        width: 85px;
+        height: 35px;
+    }
+    
+    .cloud-6::before {
+        width: 42px;
+        height: 42px;
+        top: -21px;
+        left: 10px;
+    }
+    
+    .cloud-6::after {
+        width: 48px;
+        height: 48px;
+        top: -24px;
+        right: 10px;
+    }
+    
+    .cloud-7 {
+        width: 55px;
+        height: 25px;
+    }
+    
+    .cloud-7::before {
+        width: 28px;
+        height: 28px;
+        top: -14px;
+        left: 6px;
+    }
+    
+    .cloud-7::after {
+        width: 32px;
+        height: 32px;
+        top: -16px;
+        right: 6px;
+    }
+    
+    .cloud-8 {
+        width: 70px;
+        height: 30px;
+    }
+    
+    .cloud-8::before {
+        width: 35px;
+        height: 35px;
+        top: -17px;
+        left: 8px;
+    }
+    
+    .cloud-8::after {
+        width: 40px;
+        height: 40px;
+        top: -20px;
         right: 8px;
     }
 }
